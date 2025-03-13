@@ -18,7 +18,7 @@ class FireStore_Datasource {
       return true;
     } catch (e) {
       print(e);
-      return false; // Sửa để trả về false nếu có lỗi
+      return false;
     }
   }
 
@@ -106,15 +106,15 @@ class FireStore_Datasource {
           .collection("expenses")
           .doc(uuid)
           .update({
-        "date": Timestamp.fromDate(DateTime.now()), // Cập nhật với Timestamp
+        "date": Timestamp.fromDate(DateTime.now()),
         "title": title,
         "amount": amount,
-        "type": type, // Sửa lỗi: sử dụng tham số type thay vì true cố định
+        "type": type,
       });
       return true;
     } catch (e) {
       print(e);
-      return false; // Sửa để trả về false nếu có lỗi
+      return false;
     }
   }
 
@@ -129,7 +129,7 @@ class FireStore_Datasource {
       return true;
     } catch (e) {
       print(e);
-      return false; // Sửa để trả về false nếu có lỗi
+      return false;
     }
   }
 

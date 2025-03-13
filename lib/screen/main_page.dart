@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hai123/model/colors.dart';
+import '../service/auth_service.dart';
 import 'enter_screen.dart';
-import 'home_screen.dart';
 import 'report.dart';
-import 'setting.dart';
+import 'profile_screen.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -18,8 +18,9 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> _pages = [
     const EnterScreen(),
     const Report(),
-    const ExpenseHomePage(expense: null),
-    const ProfilePage(),
+    ProfilePage(
+      auth: AuthenticationRemote(),
+    ),
   ];
 
   @override
@@ -48,10 +49,6 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Cá nhân',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'settings',
           ),
         ],
       ),

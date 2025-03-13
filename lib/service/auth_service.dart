@@ -4,6 +4,7 @@ import 'package:hai123/service/firetor.dart';
 abstract class AuthenticationDatasource {
   Future<void> register(String email, String password, String PasswordConfirm);
   Future<void> login(String email, String password);
+  Future<void> signOut();
 }
 
 class AuthenticationRemote extends AuthenticationDatasource {
@@ -23,6 +24,15 @@ class AuthenticationRemote extends AuthenticationDatasource {
           .then((value) {
         FireStore_Datasource().CreateUser(email);
       });
+    }
+  }
+
+  @override
+  Future<void> signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print(e.toString());
     }
   }
 }

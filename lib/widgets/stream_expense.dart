@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hai123/service/firetor.dart';
 import 'package:hai123/widgets/transaction_card.dart';
-
 import '../screen/edit_screen.dart';
 
-class StreamExpense extends StatelessWidget {
+class StreamExpense extends StatefulWidget {
   const StreamExpense({super.key});
 
+  @override
+  _StreamExpenseState createState() => _StreamExpenseState();
+}
+
+class _StreamExpenseState extends State<StreamExpense> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -32,13 +36,11 @@ class StreamExpense extends StatelessWidget {
             return Slidable(
               key: Key(expense.id),
               endActionPane: ActionPane(
-                motion: const ScrollMotion(), // Hiệu ứng khi vuốt
-                extentRatio:
-                    0.3, // Độ rộng của panel hành động (30% chiều rộng màn hình)
+                motion: const ScrollMotion(),
+                extentRatio: 0.4,
                 children: [
                   SlidableAction(
-                    onPressed: (context) {
-                      // Mở màn hình chỉnh sửa
+                    onPressed: (slidableContext) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -51,23 +53,25 @@ class StreamExpense extends StatelessWidget {
                     foregroundColor: Colors.white,
                     icon: Icons.edit,
                     label: 'Sửa',
+                    spacing: 8,
                   ),
                   SlidableAction(
-                    onPressed: (context) async {
-                      // Xác nhận xóa
+                    onPressed: (slidableContext) async {
                       final confirm = await showDialog(
                         context: context,
-                        builder: (context) => AlertDialog(
+                        builder: (dialogContext) => AlertDialog(
                           title: const Text('Xác nhận xóa'),
                           content:
                               Text('Bạn có chắc muốn xóa "${expense.title}"?'),
                           actions: [
                             TextButton(
-                              onPressed: () => Navigator.pop(context, false),
+                              onPressed: () =>
+                                  Navigator.pop(dialogContext, false),
                               child: const Text('Hủy'),
                             ),
                             ElevatedButton(
-                              onPressed: () => Navigator.pop(context, true),
+                              onPressed: () =>
+                                  Navigator.pop(dialogContext, true),
                               child: const Text('Xóa'),
                             ),
                           ],
@@ -75,16 +79,23 @@ class StreamExpense extends StatelessWidget {
                       );
                       if (confirm == true) {
                         await FireStore_Datasource().delete_expense(expense.id);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text('${expense.title} đã được xóa')),
-                        );
+                        // Chỉ gọi SnackBar nếu widget còn mounted và danh sách chưa rỗng
+                        if (mounted &&
+                            FireStore_Datasource()
+                                .getExpenses(snapshot)
+                                .isNotEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('${expense.title} đã được xóa')),
+                          );
+                        }
                       }
                     },
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
                     icon: Icons.delete,
                     label: 'Xóa',
+                    spacing: 8,
                   ),
                 ],
               ),
